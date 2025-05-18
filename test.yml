@@ -1,5 +1,5 @@
 ---
-- hosts: "*"
+- hosts: "lxc"
   become: yes
   tasks:
     - name: apt
