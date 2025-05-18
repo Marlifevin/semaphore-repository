@@ -1,7 +1,8 @@
 ---
-- hosts: website
-  become: true
+- hosts: "*"
+  become: yes
   tasks:
-    - name: Print OS info
-      ansible.builtin.package:
-        name: apache2
+    - name: apt
+      apt:
+        update_cache: yes
+        upgrade: 'dist'
