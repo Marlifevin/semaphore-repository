@@ -10,6 +10,7 @@
       stat:
         path: /var/run/reboot-required
       register: p
-    - name: Require Reboot
+    - name: "Require Reboot?"
+      debug:
         msg: "Reboot required"
       when: p.stat.exists
