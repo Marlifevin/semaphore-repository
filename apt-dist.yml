@@ -18,7 +18,9 @@
     - name: apt dist update
       apt:
         update_cache: yes
-        upgrade: 'dist'
+        upgrade: dist
+        autoremove: yes
+        autoclean: yes
     - name: Check that the reboot-required exists
       stat:
         path: /var/run/reboot-required
