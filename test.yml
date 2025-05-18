@@ -14,3 +14,16 @@
       debug:
         msg: "Reboot required"
       when: p.stat.exists
+    - name: Prüfe HTTP-Zugriff auf google.com
+      uri:
+        url: https://www.google.com
+        method: GET
+        return_content: no
+        status_code: 200
+        timeout: 5
+      register: google_check
+      ignore_errors: yes
+    - name: Fehler anzeigen wenn google.com nicht erreichbar ist
+      fail:
+        msg: "google.com ist nicht erreichbar!"
+      when: google_check.failed
