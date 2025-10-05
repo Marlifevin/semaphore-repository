@@ -8,12 +8,12 @@
       shell: docker system prune -a -f
       register: prune_result
 
-    - name: Unbenutzte Docker-Volumes löschen
-      shell: docker volume prune -f
-      register: volume_result
+#    - name: Unbenutzte Docker-Volumes löschen
+#      shell: docker volume prune -f
+#      register: volume_result
 
     - name: Ausgabe anzeigen
       debug:
         msg:
           - "System prune: {{ prune_result.stdout }}"
-          - "Volume prune: {{ volume_result.stdout }}"
+#          - "Volume prune: {{ volume_result.stdout }}"
