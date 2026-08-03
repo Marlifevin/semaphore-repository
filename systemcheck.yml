@@ -49,21 +49,21 @@
       register: ubuntu_release_check
       changed_when: false
       failed_when: false
-      when: ansible_distribution == "Ubuntu"
+      when: ansible_facts['distribution'] == "Ubuntu"
 
     - name: "[Ubuntu] Setze Fakten"
       set_fact:
         new_release_available: "{{ 'New release' in (ubuntu_release_check.stdout | default('')) }}"
         new_release_info: "{{ ubuntu_release_check.stdout | default('') }}"
-      when: ansible_distribution == "Ubuntu"
+      when: ansible_facts['distribution'] == "Ubuntu"
 
     # Debian / Raspberry Pi OS: kein offizielles CLI-Tool, daher Codename
     # der aktuellen "stable"-Suite von deb.debian.org abfragen und mit dem
     # lokal installierten Codename vergleichen
     - name: "[Debian] Ermittle aktuellen Codename"
       set_fact:
-        local_codename: "{{ ansible_distribution_release }}"
-      when: ansible_distribution == "Debian"
+        local_codename: "{{ _release }}"
+      when: ansible_facts['distribution'] == "Debian"
 
     - name: "[Debian] Frage aktuellen stable-Codename von deb.debian.org ab"
       uri:
@@ -71,21 +71,21 @@
         return_content: yes
         timeout: 10
       register: debian_release_file
-      when: ansible_distribution == "Debian"
+      when: ansible_facts['distribution'] == "Debian"
       ignore_errors: yes
 
     - name: "[Debian] Setze Fakten"
       set_fact:
         debian_stable_codename: "{{ debian_release_file.content | regex_search('Codename:\\s*(\\S+)', '\\1') | first }}"
       when:
-        - ansible_distribution == "Debian"
+        - ansible_facts['distribution'] == "Debian"
         - debian_release_file is succeeded
 
     - name: "[Debian] Vergleiche Codenames"
       set_fact:
         new_release_available: "{{ debian_stable_codename is defined and debian_stable_codename != local_codename }}"
         new_release_info: "Aktuell: {{ local_codename }} / Verfügbar: {{ debian_stable_codename | default('unbekannt') }}"
-      when: ansible_distribution == "Debian"
+      when: ansible_facts['distribution'] == "Debian"
 
     # --- Benachrichtigung über n8n-Webhook -----------------------------------
     - name: Sende Benachrichtigung an n8n, wenn Reboot nötig oder neue Version verfügbar
@@ -95,9 +95,9 @@
         body_format: json
         body:
           hostname: "{{ inventory_hostname }}"
-          distribution: "{{ ansible_distribution }}"
-          current_version: "{{ ansible_distribution_version }}"
-          current_codename: "{{ ansible_distribution_release }}"
+          distribution: "{{ ansible_facts['distribution'] }}"
+          current_version: "{{ ansible_facts['distribution']_version }}"
+          current_codename: "{{ ansible_facts['distribution']_release }}"
           reboot_required: "{{ reboot_check.stat.exists }}"
           new_release_available: "{{ new_release_available | default(false) }}"
           new_release_info: "{{ new_release_info | default('') }}"
