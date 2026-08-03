@@ -3,7 +3,7 @@
   vars:
     ansible_python_interpreter: /usr/bin/python3
     # In Semaphore als Environment-Variable hinterlegen, nicht hardcoden:
-    n8n_webhook_url: "{{ n8n_webhook_url }}"
+    #n8n_webhook_url: "{{ n8n_webhook_url }}"
   become: yes
   tasks:
 
