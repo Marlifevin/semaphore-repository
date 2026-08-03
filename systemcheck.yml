@@ -89,21 +89,21 @@
 
     # --- Benachrichtigung über n8n-Webhook -----------------------------------
     - name: Sende Benachrichtigung an n8n, wenn Reboot nötig oder neue Version verfügbar
-      uri:
-        url: "{{ n8n_webhook_url }}"
-        method: POST
-        body_format: json
-        body:
-          hostname: "{{ inventory_hostname }}"
-          distribution: "{{ ansible_facts['distribution'] }}"
-          current_version: "{{ ansible_facts['distribution']_version }}"
-          current_codename: "{{ ansible_facts['distribution']_release }}"
-          reboot_required: "{{ reboot_check.stat.exists }}"
-          new_release_available: "{{ new_release_available | default(false) }}"
-          new_release_info: "{{ new_release_info | default('') }}"
-        status_code: [200, 201, 202, 204]
-        timeout: 10
-      when: >
-        reboot_check.stat.exists or
-        (new_release_available | default(false))
-      ignore_errors: yes
+          uri:
+            url: "{{ n8n_webhook_url }}"
+            method: POST
+            body_format: json
+            body:
+              hostname: "{{ inventory_hostname }}"
+              distribution: "{{ ansible_facts['distribution'] }}"
+              current_version: "{{ ansible_facts['distribution_version'] }}"
+              current_codename: "{{ ansible_facts['distribution_release'] }}"
+              reboot_required: "{{ reboot_check.stat.exists }}"
+              new_release_available: "{{ new_release_available | default(false) }}"
+              new_release_info: "{{ new_release_info | default('') }}"
+            status_code: [200, 201, 202, 204]
+            timeout: 10
+          when: >
+            reboot_check.stat.exists or
+            (new_release_available | default(false))
+          ignore_errors: yes
