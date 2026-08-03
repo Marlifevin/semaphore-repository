@@ -62,7 +62,7 @@
     # lokal installierten Codename vergleichen
     - name: "[Debian] Ermittle aktuellen Codename"
       set_fact:
-        local_codename: "{{ _release }}"
+        local_codename: "{{ ansible_facts['distribution_release'] }}"
       when: ansible_facts['distribution'] == "Debian"
 
     - name: "[Debian] Frage aktuellen stable-Codename von deb.debian.org ab"
